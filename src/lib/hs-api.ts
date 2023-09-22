@@ -1,6 +1,6 @@
 
-const HS_URL = process.env.HEADSCALE_SERVER;
-const HS_KEY = process.env.HEADSCALE_APIKEY;
+export const HS_URL = process.env.HEADSCALE_SERVER!;
+export const HS_KEY = process.env.HEADSCALE_APIKEY!;
 
 
 export interface Machine {
