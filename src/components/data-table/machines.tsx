@@ -5,6 +5,8 @@ import {
   CaretSortIcon,
   ChevronDownIcon,
   DotsHorizontalIcon,
+  CopyIcon,
+  DotFilledIcon
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
@@ -38,37 +40,65 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Copy from "@/components/copy";
 import type { Machine } from "@/lib/hs-api";
+import {cn} from "@/lib/utils";
 
 const columns: ColumnDef<Machine>[] = [
   {
     accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    header: "名称",
+    cell: ({ row }) => {
+      const user = row.original.user;
+      return (
+        <div className="">
+          <div className={`text-primary font-bold `}>{row.getValue("name")}</div>
+          <div className={`text-muted-foreground`}>{user.name}</div>
+        </div>
+      )
+    },
   },
   {
-    accessorKey: "id",
-    header: ({ column }) => {
+    id: "ipAddresses",
+    header: "地址",
+    cell: ({ row }) => {
+      const ipAddresses = row.original.ipAddresses
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="w-4 h-4 ml-2" />
-        </Button>
-      );
+        <div className={`group text-muted-foreground`}>
+          {
+            ipAddresses?.sort()?.map((ip) => (
+              <div key={ip} className={`flex items-center gap-x-1`}>
+                <span>{ip}</span>
+                <Copy text={ip} className="opacity-0 group-hover:opacity-100" />
+              </div>
+            ))
+          }
+        </div>
+      )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "lastSeen",
+    header: "最后在线",
+    cell: ({ row }) => {
+      const { online, lastSeen } = row.original
+      return (
+        <div className="flex items-center">
+          <DotFilledIcon className={cn("w-6 h-6 text-gray-400", online && "text-green-600")} />
+          <span>
+            {online ? "在线" : lastSeen}
+          </span>
+        </div>
+      )
+    },
   },
   {
     id: "active",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
-
+      const machine = row.original;
       return (
-        <div className="bg-blue-200">
+        <div className="flex items-center justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="w-8 h-8 p-0">
@@ -77,11 +107,11 @@ const columns: ColumnDef<Machine>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {/*<DropdownMenuLabel>Actions</DropdownMenuLabel>*/}
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
+                onClick={() => navigator.clipboard.writeText(machine.id)}
               >
-                Copy payment ID
+                复制机器ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View customer</DropdownMenuItem>
@@ -130,15 +160,17 @@ export default function DataTable({ list }: { list: Machine[] }) {
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          onChange={(event) =>{
+            const res = table.getColumn("name")?.setFilterValue(event.target.value)
+            console.log(res)
+            return res
+          }}
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="w-4 h-4 ml-2" />
+              列 <ChevronDownIcon className="w-4 h-4 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -162,7 +194,7 @@ export default function DataTable({ list }: { list: Machine[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="border rounded-md">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -213,27 +245,32 @@ export default function DataTable({ list }: { list: Machine[] }) {
         </Table>
       </div>
       <div className="flex items-center justify-end py-4 space-x-2">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+          {
+            table.getCanPreviousPage() && (
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                上一页
+              </Button>
+            )
+          }
+
+          {
+            table.getCanNextPage() && (
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                下一页
+              </Button>
+            )
+          }
         </div>
       </div>
     </div>
