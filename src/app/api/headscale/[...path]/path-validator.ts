@@ -23,6 +23,7 @@ export class PathValidator {
    * @returns {boolean} 如果路径被允许，则返回true；否则返回false。
    */
   isPathAllowed(requestMethod: HttpMethod, requestUrl: string): boolean {
+    if(process.env.NODE_ENV === 'development') return true;
     const url = new URL(requestUrl);
     const searchParams = new URLSearchParams(url.search);
     const requestQueryKeys = Array.from(searchParams.keys());

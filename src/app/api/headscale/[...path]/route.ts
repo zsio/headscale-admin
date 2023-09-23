@@ -7,7 +7,11 @@ const pathValidator = new PathValidator([
     method: ["GET"],
     url: "/api/v1/machine",
     query: ['user']
-  }
+  },
+  {
+    method: ["GET"],
+    url: "/api/v1/user",
+  },
 ])
 
 function prettyObject(msg: any) {
@@ -29,7 +33,7 @@ export async function requestHs(req: NextRequest) {
   const controller = new AbortController();
   
   const hsPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
-    "/api/headscale-api",
+    "/api/headscale",
     "/api"
   );
 
@@ -81,11 +85,10 @@ async function handle(
   }
 
   const hsPath = `${req.nextUrl}`.replaceAll(
-    "/api/headscale-api",
+    "/api/headscale",
     "/api"
   );
 
-  console.log(hsPath)
   
   const isAllowed = pathValidator.isPathAllowed(req.method, hsPath)
   

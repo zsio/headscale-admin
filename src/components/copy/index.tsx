@@ -16,7 +16,6 @@ export default function Copy(props: CopyProps) {
 
   const handleClick = () => {
     setShowCheckbox(true);
-    console.log(1);
     toast({
       title: "Scheduled: Catch up ",
       description: "Friday, February 10, 2023 at 5:57 PM",
@@ -24,7 +23,6 @@ export default function Copy(props: CopyProps) {
         <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
       ),
     })
-    console.log(2);
     copy(text);
     
     setTimeout(() => {

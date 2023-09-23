@@ -21,7 +21,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -31,7 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import {Input} from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -41,14 +41,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Copy from "@/components/copy";
-import type { Machine } from "@/lib/hs-api";
+import TimeAgo from "@/components/timeago";
+import type {HsMachine} from "@/lib/hs.d";
 import {cn} from "@/lib/utils";
 
-const columns: ColumnDef<Machine>[] = [
+const columns: ColumnDef<HsMachine>[] = [
   {
     accessorKey: "name",
     header: "名称",
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const user = row.original.user;
       return (
         <div className="">
@@ -61,15 +62,15 @@ const columns: ColumnDef<Machine>[] = [
   {
     id: "ipAddresses",
     header: "地址",
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const ipAddresses = row.original.ipAddresses
       return (
-        <div className={`group text-muted-foreground`}>
+        <div className={`group text-muted-foreground flex flex-col gap-y-0.5`}>
           {
             ipAddresses?.sort()?.map((ip) => (
               <div key={ip} className={`flex items-center gap-x-1`}>
-                <span>{ip}</span>
-                <Copy text={ip} className="opacity-0 group-hover:opacity-100" />
+                <span className="underline decoration-dotted">{ip}</span>
+                <Copy text={ip} className="opacity-0 group-hover:opacity-100"/>
               </div>
             ))
           }
@@ -80,14 +81,12 @@ const columns: ColumnDef<Machine>[] = [
   {
     accessorKey: "lastSeen",
     header: "最后在线",
-    cell: ({ row }) => {
-      const { online, lastSeen } = row.original
+    cell: ({row}) => {
+      const {online, lastSeen} = row.original
       return (
         <div className="flex items-center">
-          <DotFilledIcon className={cn("w-6 h-6 text-gray-400", online && "text-green-600")} />
-          <span>
-            {online ? "在线" : lastSeen}
-          </span>
+          <DotFilledIcon className={cn("w-6 h-6 text-gray-400", online && "text-green-600")}/>
+          <TimeAgo time={lastSeen} text={online ? "在线" : undefined}/>
         </div>
       )
     },
@@ -95,7 +94,7 @@ const columns: ColumnDef<Machine>[] = [
   {
     id: "active",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const machine = row.original;
       return (
         <div className="flex items-center justify-end">
@@ -103,7 +102,7 @@ const columns: ColumnDef<Machine>[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="w-8 h-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="w-4 h-4" />
+                <DotsHorizontalIcon className="w-4 h-4"/>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -113,7 +112,7 @@ const columns: ColumnDef<Machine>[] = [
               >
                 复制机器ID
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator/>
               <DropdownMenuItem>View customer</DropdownMenuItem>
               <DropdownMenuItem>View payment details</DropdownMenuItem>
             </DropdownMenuContent>
@@ -124,7 +123,7 @@ const columns: ColumnDef<Machine>[] = [
   },
 ];
 
-export default function DataTable({ list }: { list: Machine[] }) {
+export default function DataTable({list}: { list: HsMachine[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -133,7 +132,7 @@ export default function DataTable({ list }: { list: Machine[] }) {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const data: Machine[] = list;
+  const data: HsMachine[] = list;
 
   const table = useReactTable({
     data,
@@ -160,9 +159,8 @@ export default function DataTable({ list }: { list: Machine[] }) {
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>{
+          onChange={(event) => {
             const res = table.getColumn("name")?.setFilterValue(event.target.value)
-            console.log(res)
             return res
           }}
           className="max-w-sm"
@@ -170,7 +168,7 @@ export default function DataTable({ list }: { list: Machine[] }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              列 <ChevronDownIcon className="w-4 h-4 ml-2" />
+              列 <ChevronDownIcon className="w-4 h-4 ml-2"/>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -198,16 +196,16 @@ export default function DataTable({ list }: { list: Machine[] }) {
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow className='hover:bg-white' key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

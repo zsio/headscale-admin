@@ -1,16 +1,15 @@
+'use client'
 
-import { hsGetMachine } from "@/lib/hs-api";
 import DataTable from '@/components/data-table/machines';
+import { useHsMachines } from "@/lib/hs-hooks";
 
-
-export default async function Page() {
+export default function Page() {
   
-  const data = await hsGetMachine()
-  console.log(data);
-
+  const {data, error, isLoading} = useHsMachines()
+  
   return (
     <>
-      <DataTable list={data.machines} />
+      <DataTable list={data} />
     </>
   )
 }
