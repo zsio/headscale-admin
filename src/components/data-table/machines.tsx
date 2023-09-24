@@ -71,12 +71,11 @@ const columns: ColumnDef<HsMachine>[] = [
     cell: ({row}) => {
       const ipAddresses = row.original.ipAddresses
       return (
-        <div className={`group text-muted-foreground flex flex-col gap-y-0.5`}>
+        <div className={`text-muted-foreground flex flex-col gap-y-0.5`}>
           {
             ipAddresses?.sort()?.map((ip) => (
               <div key={ip} className={`flex items-center gap-x-1`}>
-                <span className="underline decoration-dotted">{ip}</span>
-                <Copy text={ip} className="opacity-0 group-hover:opacity-100"/>
+                <Copy text={ip} className=""><span className="underline decoration-dotted">{ip}</span></Copy>
               </div>
             ))
           }
