@@ -3,7 +3,6 @@
 import {CopyIcon, CheckIcon} from "@radix-ui/react-icons";
 import {cn, copy} from "@/lib/utils"
 import React, {useState} from "react";
-import {ToastAction} from "@/components/ui/toast"
 import {useToast} from "@/components/ui/use-toast"
 
 type CopyProps = {

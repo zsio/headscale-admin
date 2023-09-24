@@ -14,11 +14,11 @@ const fetcher = async <T>(url: RequestInfo | URL) => {
 }
 
 export function useHsUsers() {
-  const {data, error, isLoading} = useSWR(`${HS_BASE_URL}/user`, fetcher<{users: HsUser[]}>)
-  return {data: data?.users || [], error, isLoading}
+  const {data, error, isLoading, mutate} = useSWR(`${HS_BASE_URL}/user`, fetcher<{users: HsUser[]}>)
+  return {data: data?.users || [], error, isLoading, mutate}
 }
 
 export function useHsMachines(id = "") {
-  const {data, error, isLoading} = useSWR(`${HS_BASE_URL}/machine?user=${id}`, fetcher<{machines: HsMachine[]}>)
-  return {data: data?.machines || [], error, isLoading}
+  const {data, error, isLoading, mutate} = useSWR(`${HS_BASE_URL}/machine?user=${id}`, fetcher<{machines: HsMachine[]}>)
+  return {data: data?.machines || [], error, isLoading, mutate}
 }
