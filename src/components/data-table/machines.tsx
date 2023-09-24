@@ -40,6 +40,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PlusCircledIcon } from '@radix-ui/react-icons'
 import Copy from "@/components/copy";
 import TimeAgo from "@/components/timeago";
 import type {HsMachine} from "@/lib/hs.d";
@@ -129,7 +130,6 @@ const columns: ColumnDef<HsMachine>[] = [
 ];
 
 export default function DataTable({list}: { list: HsMachine[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -143,7 +143,6 @@ export default function DataTable({list}: { list: HsMachine[] }) {
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -152,7 +151,6 @@ export default function DataTable({list}: { list: HsMachine[] }) {
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
-      sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
@@ -161,7 +159,7 @@ export default function DataTable({list}: { list: HsMachine[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <div>
           <Input
             placeholder="名称 / 用户 / IP"
@@ -173,32 +171,12 @@ export default function DataTable({list}: { list: HsMachine[] }) {
           />
           
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              列 <ChevronDownIcon className="w-4 h-4 ml-2"/>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <Button variant="outline" className="flex gap-1 items-center">
+            <PlusCircledIcon className="w-4 h-4" />
+            <span>添加</span>
+          </Button>
+        </div>
       </div>
       <div className="rounded-md">
         <Table>
@@ -241,19 +219,23 @@ export default function DataTable({list}: { list: HsMachine[] }) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-muted-foreground"
                 >
-                  No results.
+                  暂无数据
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end py-4 space-x-2">
-        <div className="space-x-2">
-          {
-            table.getCanPreviousPage() && (
+      {
+        (table.getPageCount() > 1) && (
+          <div className="flex items-center justify-end py-4 space-x-2">
+            <div className="flex w-[100px] items-center justify-center text-sm">
+              {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
+            </div>
+            <div className="space-x-2">
+
               <Button
                 variant="link"
                 size="sm"
@@ -262,11 +244,7 @@ export default function DataTable({list}: { list: HsMachine[] }) {
               >
                 上一页
               </Button>
-            )
-          }
 
-          {
-            table.getCanNextPage() && (
               <Button
                 variant="link"
                 size="sm"
@@ -275,10 +253,11 @@ export default function DataTable({list}: { list: HsMachine[] }) {
               >
                 下一页
               </Button>
-            )
-          }
-        </div>
-      </div>
+            </div>
+          </div>
+        )
+      }
+      
     </div>
   );
 }
