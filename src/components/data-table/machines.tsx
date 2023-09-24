@@ -49,6 +49,12 @@ const columns: ColumnDef<HsMachine>[] = [
   {
     accessorKey: "name",
     header: "名称",
+    filterFn: (row, columnId, searchValue) => {
+      if (row.original.name.includes(searchValue)) return true;
+      if (row.original.user.name.includes(searchValue)) return true;
+      if (row.original.givenName.includes(searchValue)) return true;
+      return row.original.ipAddresses.join(' ').includes(searchValue);
+    },
     cell: ({row}) => {
       const user = row.original.user;
       return (
@@ -134,6 +140,7 @@ export default function DataTable({list}: { list: HsMachine[] }) {
 
   const data: HsMachine[] = list;
 
+
   const table = useReactTable({
     data,
     columns,
@@ -156,15 +163,17 @@ export default function DataTable({list}: { list: HsMachine[] }) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => {
-            const res = table.getColumn("name")?.setFilterValue(event.target.value)
-            return res
-          }}
-          className="max-w-sm"
-        />
+        <div>
+          <Input
+            placeholder="名称 / 用户 / IP"
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) => {
+              return table.getColumn("name")?.setFilterValue(event.target.value)
+            }}
+            className="max-w-sm"
+          />
+          
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
