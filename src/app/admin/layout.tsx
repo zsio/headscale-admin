@@ -14,7 +14,7 @@ export default function AdminLayout({children}: {
       icon: CubeIcon
     },
     {
-      url: "/admin/user",
+      url: "/admin/users",
       title: "用 户",
       icon: PersonIcon
     },
