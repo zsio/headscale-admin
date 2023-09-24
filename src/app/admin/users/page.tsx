@@ -2,11 +2,10 @@
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {useHsUsers} from "@/lib/hs-hooks";
-import {HsUser} from "@/lib/hs";
 import TimeAgo from "@/components/timeago";
 import Copy from "@/components/copy";
 import {Button} from "@/components/ui/button";
-import {InputIcon, TrashIcon} from "@radix-ui/react-icons";
+import {TrashIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
 import UsernameEdit from "./username-edit";
 
