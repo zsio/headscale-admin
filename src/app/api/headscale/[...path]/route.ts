@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { HS_URL, HS_KEY } from '@/lib/hs-api'
 import { PathValidator } from "./path-validator"
+
+export const HS_URL = process.env.HEADSCALE_SERVER!;
+export const HS_KEY = process.env.HEADSCALE_APIKEY!;
 
 const pathValidator = new PathValidator([
   {
@@ -49,6 +51,7 @@ export async function requestHs(req: NextRequest) {
 
   const fetchUrl = `${baseUrl}${hsPath}`;
   
+  
   const fetchOptions: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -58,6 +61,8 @@ export async function requestHs(req: NextRequest) {
     method: req.method,
     body: req.body,
     redirect: "manual",
+    // @ts-ignore
+    duplex: "half",
     signal: controller.signal,
   };
   
