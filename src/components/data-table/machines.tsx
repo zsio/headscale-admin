@@ -34,7 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlusCircledIcon } from '@radix-ui/react-icons'
+import { PlusCircledIcon, PersonIcon } from '@radix-ui/react-icons'
 import Copy from "@/components/copy";
 import TimeAgo from "@/components/timeago";
 import type {HsMachine} from "@/lib/hs.d";
@@ -54,8 +54,11 @@ const columns: ColumnDef<HsMachine>[] = [
       const user = row.original.user;
       return (
         <div className="">
-          <div className={`text-primary font-bold `}>{row.getValue("name")}</div>
-          <div className={`text-muted-foreground`}>{user.name}</div>
+          <div className={`text-primary font-bold`}>{row.getValue("name")}</div>
+          <div className={`text-muted-foreground text-xs`}>
+            {/*<PersonIcon className={`w-4 h-4`} />*/}
+            <span>{user.name}</span>
+          </div>
         </div>
       )
     },
@@ -107,14 +110,16 @@ const columns: ColumnDef<HsMachine>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {/*<DropdownMenuLabel>Actions</DropdownMenuLabel>*/}
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(machine.id)}
-              >
-                复制机器ID
+              <DropdownMenuItem>
+                选项
               </DropdownMenuItem>
               <DropdownMenuSeparator/>
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
+              <DropdownMenuItem>
+                选项
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                选项
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -163,7 +168,6 @@ export default function DataTable({list}: { list: HsMachine[] }) {
             }}
             className="max-w-sm"
           />
-          
         </div>
         <div>
           <Button variant="outline" className="flex gap-1 items-center">
