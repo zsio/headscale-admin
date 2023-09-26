@@ -2,7 +2,7 @@ import React from "react";
 
 import { Toaster } from "@/components/ui/toaster"
 import Header from '@/components/header';
-import {CubeIcon, GearIcon, LockOpen1Icon, PersonIcon} from "@radix-ui/react-icons";
+import {CubeIcon, GearIcon, PersonIcon, RocketIcon, Link1Icon } from "@radix-ui/react-icons";
 
 export default function AdminLayout({children}: {
   children: React.ReactNode
@@ -20,9 +20,14 @@ export default function AdminLayout({children}: {
       icon: PersonIcon
     },
     {
-      url: "/admin/apikey",
-      title: "密 钥",
-      icon: LockOpen1Icon
+      url: "/admin/routes",
+      title: "路 由",
+      icon: Link1Icon
+    },
+    {
+      url: "/admin/preauthkey",
+      title: "预认证Key",
+      icon: RocketIcon
     },
     {
       url: "/admin/setting",
