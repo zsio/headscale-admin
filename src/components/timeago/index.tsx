@@ -15,9 +15,14 @@ export default function TimeAgo(props: { time: string, text?: string } & React.H
   const [timeFormatText, setTimeFormatText] = useState("")
 
   useEffect(() => {
-    if (dayjs(time).isValid()) {
+    if (!dayjs(time).isValid()) return
+    setTimeAgoText(format(time, 'zh_CN'))
+    setTimeFormatText(dayjs(time).format("YYYY-MM-DD HH:mm:ss"))
+    const timer = setInterval(() => {
       setTimeAgoText(format(time, 'zh_CN'))
-      setTimeFormatText(dayjs(time).format("YYYY-MM-DD HH:mm:ss"))
+    }, 1000)
+    return () => {
+      clearInterval(timer)
     }
   }, [time])
 
@@ -27,7 +32,7 @@ export default function TimeAgo(props: { time: string, text?: string } & React.H
         <Tooltip delayDuration={100}>
           <TooltipTrigger>
             <span className={cn("underline decoration-dotted", className)} {...p}>
-              {text ||  timeAgoText}
+              {text || timeAgoText}
             </span>
           </TooltipTrigger>
           <TooltipContent>
