@@ -36,3 +36,9 @@ export function hsCreateUser(name: string) {
     })
   });
 }
+
+export function hsDeleteName(name: string) {
+  return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/user/${name}`, {
+    method: "DELETE"
+  });
+}

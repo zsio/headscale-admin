@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {Fragment, useState} from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,27 +15,28 @@ import {InputIcon, UpdateIcon} from "@radix-ui/react-icons";
 import {useToast} from "@/components/ui/use-toast"
 import {Input} from "@/components/ui/input";
 import {Badge} from "@/components/ui/badge"
-import {hsUserRename} from "@/lib/hs-api"
+import {hsUserRename, hsCreateUser} from "@/lib/hs-api"
 
 interface Props {
-  oldName: string
+  oldName?: string
   onClose?: () => void
+  children?: React.ReactNode
 }
 
-export default function UsernameEdit({oldName, onClose}: Props) {
+export default function UsernameChange({oldName, onClose, children}: Props) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
 
   const {toast} = useToast()
 
-  const handleSubmit = () => {
+  const handleRename = () => {
+    if (!oldName) return
     setLoading(true)
     hsUserRename(oldName, name)
       .then(res => {
-        console.log(res);
         toast({
-          duration: 1000,
+          duration: 500,
           description: "修改成功",
         })
       })
@@ -48,39 +49,84 @@ export default function UsernameEdit({oldName, onClose}: Props) {
         })
       })
       .finally(() => {
+        onClose?.()
         setName("")
         setOpen(false)
         setLoading(false)
-        onClose?.()
       })
   }
-  
-  
+  const handleCreate = () => {
+    setLoading(true)
+    hsCreateUser(name)
+      .then(res => {
+        toast({
+          duration: 500,
+          description: "创建成功",
+        })
+      })
+      .catch(err => {
+        toast({
+          duration: 3000,
+          title: "创建失败",
+          variant: "destructive",
+          description: err.message,
+        })
+      })
+      .finally(() => {
+        onClose?.()
+        setName("")
+        setOpen(false)
+        setLoading(false)
+      })
+  }
+
+  const handleClick = () => {
+    oldName ? handleRename() : handleCreate()
+  }
+
 
   return (
     <AlertDialog open={open}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
-          <InputIcon className="h-4 w-4"/>
-        </Button>
+        <div onClick={() => setOpen(true)}>
+          {
+            children
+          }
+        </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            <span>当前用户名：</span>
-            <Badge
-              variant="secondary"
-              className="text-sm">
-              {oldName}
-            </Badge>
+            {
+              oldName ? (
+                <Fragment>
+                  <span>当前用户名：</span>
+                  <Badge
+                    variant="secondary"
+                    className="text-sm">
+                    {oldName}
+                  </Badge>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <span>请输入新的用户名：</span>
+                </Fragment>
+              )
+            }
           </AlertDialogTitle>
           <AlertDialogDescription>
             <Input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="my-2"
               autoFocus
+              value={name}
+              className="my-2"
               placeholder="请输入新的用户名"
+              onChange={e => setName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleClick()
+                }
+                e.stopPropagation()
+              }}
             />
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -88,7 +134,7 @@ export default function UsernameEdit({oldName, onClose}: Props) {
           <AlertDialogCancel disabled={loading} onClick={() => setOpen(false)}>
             <span>取 消</span>
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={handleSubmit}>
+          <AlertDialogAction disabled={loading} onClick={handleClick}>
             {loading && <UpdateIcon className="animate-spin"/>}
             <span>确 定</span>
           </AlertDialogAction>

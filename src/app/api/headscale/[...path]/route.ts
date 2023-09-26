@@ -97,6 +97,8 @@ async function handle(
   
   const isAllowed = pathValidator.isPathAllowed(req.method, hsPath)
   
+  
+  
   if (!isAllowed) {
     return NextResponse.json({}, {
       status: 403,
@@ -114,3 +116,5 @@ async function handle(
 
 export const GET = handle;
 export const POST = handle;
+export const OPTIONS = handle;
+export const DELETE = handle;
