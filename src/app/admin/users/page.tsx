@@ -18,9 +18,9 @@ import Copy from "@/components/copy";
 import {Button} from "@/components/ui/button";
 import {InputIcon, TrashIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
-import UsernameChange from "./username-change";
+import ChangeName from "../../../components/change-name/change-name";
 import React from "react";
-import {hsDeleteName} from "@/lib/hs-api";
+import {hsDeleteName, hsUserRename, hsCreateUser } from "@/lib/hs-api";
 import {useToast} from "@/components/ui/use-toast";
 
 
@@ -52,9 +52,9 @@ export default function Page() {
     <>
       <div className="flex justify-between">
         <div/>
-        <UsernameChange onClose={() => handleRefresh()}>
+        <ChangeName createNameAPI={hsCreateUser} onClose={() => handleRefresh()}>
           <Button variant="outline" size="default">创建用户</Button>
-        </UsernameChange>
+        </ChangeName>
 
       </div>
       <Table>
@@ -76,30 +76,33 @@ export default function Page() {
               <TableCell>
                 <TimeAgo time={user.createdAt}/>
               </TableCell>
-              <TableCell className="flex items-center justify-end gap-x-1">
-                <UsernameChange oldName={user.name} onClose={() => handleRefresh()}>
-                  <Button variant="ghost" size="icon">
-                    <InputIcon className="h-4 w-4"/>
-                  </Button>
-                </UsernameChange>
-                <Separator orientation="vertical"/>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
+              <TableCell>
+                <div className="flex h-5 items-center space-x-2 text-sm">
+                  <ChangeName renameAPI={hsUserRename} oldName={user.name} onClose={() => handleRefresh()}>
                     <Button variant="ghost" size="icon">
-                      <TrashIcon className="h-4 w-4"/>
+                      <InputIcon className="h-4 w-4"/>
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>确定要删除此用户吗？</AlertDialogTitle>
-                      <AlertDialogDescription/>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>取 消</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(user.name)}>确 定</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                  </ChangeName>
+                  <Separator orientation="vertical" />
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4"/>
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>确定要删除此用户吗？</AlertDialogTitle>
+                        <AlertDialogDescription/>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>取 消</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(user.name)}>确 定</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+                
 
               </TableCell>
             </TableRow>

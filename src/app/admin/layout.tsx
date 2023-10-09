@@ -25,8 +25,8 @@ export default function AdminLayout({children}: {
       icon: Link1Icon
     },
     {
-      url: "/admin/preauthkey",
-      title: "预认证Key",
+      url: "/admin/pre-auth-key",
+      title: "预认证 Key",
       icon: RocketIcon
     },
     {

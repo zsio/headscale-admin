@@ -1,6 +1,6 @@
 'use client'
 
-import { useHsMachines } from "@/lib/hs-hooks";
+import {useHsMachines} from "@/lib/hs-hooks";
 import {useToast} from "@/components/ui/use-toast";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Copy from "@/components/copy";
@@ -9,15 +9,24 @@ import {Button} from "@/components/ui/button";
 import {DotFilledIcon, DotsHorizontalIcon, InputIcon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
 import React, {useEffect, useState} from "react";
 import {cn} from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import {Input} from "@/components/ui/input";
-import {HsMachine} from "@/lib/hs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import ChangeName from "@/components/change-name/change-name";
+import {Separator} from "@/components/ui/separator";
+import {hsMachineRename} from "@/lib/hs-api";
 
 export default function Page() {
   const [search, setSearch] = useState("")
@@ -27,13 +36,13 @@ export default function Page() {
     mutate().then()
   };
 
-  let list = data?.filter?.(row=>{
+  let list = data?.filter?.(row => {
     if (row.name.includes(search)) return true;
     if (row.user.name.includes(search)) return true;
     if (row.givenName.includes(search)) return true;
     return row.ipAddresses.join(' ').includes(search);
   }) || []
-  
+
   return (
     <>
       <div className="flex items-center justify-between py-4">
@@ -49,7 +58,7 @@ export default function Page() {
         </div>
         <div>
           <Button variant="outline" className="flex items-center gap-1">
-            <PlusCircledIcon className="w-4 h-4" />
+            <PlusCircledIcon className="w-4 h-4"/>
             <span>添加</span>
           </Button>
         </div>
@@ -58,8 +67,8 @@ export default function Page() {
         <TableHeader>
           <TableRow className='hover:bg-white'>
             <TableHead>名称</TableHead>
-            <TableHead>名称</TableHead>
-            <TableHead>最后在线</TableHead>
+            <TableHead>地址</TableHead>
+            <TableHead>状态</TableHead>
             <TableHead className="w-20"/>
           </TableRow>
         </TableHeader>
@@ -67,23 +76,49 @@ export default function Page() {
           {list.map((machine) => (
             <TableRow key={machine.id}>
               <TableCell>
-                <div className="">
-                  <div className={`text-primary font-bold`}><Copy text={machine.name}>{machine.name}</Copy></div>
+                <div className="py-1.5">
+                  <div className={`text-primary font-bold`}><Copy text={machine.givenName}>{machine.givenName}</Copy>
+                  </div>
                   <div className={`text-muted-foreground text-xs`}>
                     <span>{machine.user.name}</span>
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                <div className={`text-muted-foreground flex flex-col gap-y-0.5`}>
-                  {
-                    machine.ipAddresses?.sort()?.map((ip) => (
-                      <div key={ip} className={`flex items-center gap-x-1`}>
-                        <Copy text={ip} className=""><span className="underline decoration-dotted">{ip}</span></Copy>
-                      </div>
-                    ))
-                  }
-                </div>
+                {
+                  (
+                    () => {
+                      const ips = machine.ipAddresses?.sort?.() ?? []
+                      return (
+                        <>
+                          <HoverCard openDelay={300} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <div className="underline decoration-dotted">
+                                <Copy text={ips?.[0]} className=""><span className="underline decoration-dotted">{ips?.[0]}</span></Copy>
+                              </div>
+                            </HoverCardTrigger>
+                            <HoverCardContent>
+                              <div className={`text-muted-foreground flex flex-col gap-y-0.5`}>
+                                <div className={`flex items-center gap-x-1`}>
+                                  <Copy text={machine.givenName} className=""><span
+                                    className="underline decoration-dotted">{machine.givenName}</span></Copy>
+                                </div>
+                                {
+                                  ips?.map((ip) => (
+                                    <div key={ip} className={`flex items-center gap-x-1`}>
+                                      <Copy text={ip} className=""><span className="underline decoration-dotted">{ip}</span></Copy>
+                                    </div>
+                                  ))
+                                }
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        </>
+                      )
+                    }
+                  )()
+                }
+
               </TableCell>
               <TableCell>
                 <div className="flex items-center">
@@ -92,29 +127,35 @@ export default function Page() {
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center justify-end">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="w-8 h-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <DotsHorizontalIcon className="w-4 h-4"/>
+                <div className="flex h-5 items-center space-x-2 text-sm">
+                  <ChangeName renameAPI={hsMachineRename} id={machine.id} oldName={machine.givenName}
+                              onClose={() => handleRefresh()}>
+                    <Button variant="ghost" size="icon">
+                      <InputIcon className="h-4 w-4"/>
+                    </Button>
+                  </ChangeName>
+                  <Separator orientation="vertical"/>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4"/>
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {/*<DropdownMenuLabel>Actions</DropdownMenuLabel>*/}
-                      <DropdownMenuItem>
-                        选项
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator/>
-                      <DropdownMenuItem>
-                        选项
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        选项
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>确定要删除此用户吗？</AlertDialogTitle>
+                        <AlertDialogDescription/>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>取 消</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => {
+                        }}>确 定</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
+
+
               </TableCell>
             </TableRow>
           ))}

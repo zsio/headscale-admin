@@ -1,12 +1,12 @@
 const CLIENT_API_BASE_URL = "/api/headscale/v1";
 
-interface BaseHsRes {
+export interface BaseHsRes {
   code?: number;
   message?: string;
   details?: any;
 }
 
-type HsRes<T> = BaseHsRes & T
+export type HsRes<T> = BaseHsRes & T
 
 async function fetchAndHandle<T>(url: string, options: RequestInit): Promise<HsRes<T>> {
   try {
@@ -40,5 +40,11 @@ export function hsCreateUser(name: string) {
 export function hsDeleteName(name: string) {
   return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/user/${name}`, {
     method: "DELETE"
+  });
+}
+
+export function hsMachineRename(machineId: string, newName: string) {
+  return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/machine/${machineId}/rename/${newName}`, {
+    method: "POST",
   });
 }

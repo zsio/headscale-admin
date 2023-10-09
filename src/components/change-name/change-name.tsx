@@ -10,20 +10,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import {Button} from "@/components/ui/button"
-import {InputIcon, UpdateIcon} from "@radix-ui/react-icons";
+import {UpdateIcon} from "@radix-ui/react-icons";
 import {useToast} from "@/components/ui/use-toast"
 import {Input} from "@/components/ui/input";
 import {Badge} from "@/components/ui/badge"
-import {hsUserRename, hsCreateUser} from "@/lib/hs-api"
+import {hsUserRename, hsCreateUser, type HsRes} from "@/lib/hs-api"
 
 interface Props {
+  id?: string
   oldName?: string
   onClose?: () => void
+  renameAPI?: (oldName: string, newName: string) => Promise<HsRes<{}>>
+  createNameAPI?: (name: string) => Promise<HsRes<{}>>
   children?: React.ReactNode
 }
 
-export default function UsernameChange({oldName, onClose, children}: Props) {
+export default function ChangeName({id, oldName, onClose, children, renameAPI, createNameAPI}: Props) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -33,7 +35,7 @@ export default function UsernameChange({oldName, onClose, children}: Props) {
   const handleRename = () => {
     if (!oldName) return
     setLoading(true)
-    hsUserRename(oldName, name)
+    renameAPI?.(id ?? oldName, name)
       .then(res => {
         toast({
           duration: 500,
@@ -57,7 +59,7 @@ export default function UsernameChange({oldName, onClose, children}: Props) {
   }
   const handleCreate = () => {
     setLoading(true)
-    hsCreateUser(name)
+    createNameAPI?.(name)
       .then(res => {
         toast({
           duration: 500,
@@ -100,7 +102,7 @@ export default function UsernameChange({oldName, onClose, children}: Props) {
             {
               oldName ? (
                 <Fragment>
-                  <span>当前用户名：</span>
+                  <span>当前名称：</span>
                   <Badge
                     variant="secondary"
                     className="text-sm">
@@ -109,7 +111,7 @@ export default function UsernameChange({oldName, onClose, children}: Props) {
                 </Fragment>
               ) : (
                 <Fragment>
-                  <span>请输入新的用户名：</span>
+                  <span>请输入新的名称：</span>
                 </Fragment>
               )
             }
@@ -119,7 +121,7 @@ export default function UsernameChange({oldName, onClose, children}: Props) {
               autoFocus
               value={name}
               className="my-2"
-              placeholder="请输入新的用户名"
+              placeholder="新名称"
               onChange={e => setName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PathValidator } from "./path-validator"
 
-export const HS_URL = process.env.HEADSCALE_SERVER!;
-export const HS_KEY = process.env.HEADSCALE_APIKEY!;
+const HS_URL = process.env.HEADSCALE_SERVER!;
+const HS_KEY = process.env.HEADSCALE_APIKEY!;
 
 const pathValidator = new PathValidator([
   {
@@ -31,7 +31,7 @@ function prettyObject(msg: any) {
 }
 
 
-export async function requestHs(req: NextRequest) {
+async function requestHs(req: NextRequest) {
   const controller = new AbortController();
   
   const hsPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
