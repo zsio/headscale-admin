@@ -114,7 +114,7 @@ export default function Page() {
                         <>
                           <HoverCard openDelay={300} closeDelay={100}>
                             <HoverCardTrigger asChild>
-                              <div className="underline decoration-dotted">
+                              <div className="underline decoration-dotted inline-block">
                                 <Copy text={ips?.[0]} className=""><span
                                   className="underline decoration-dotted">{ips?.[0]}</span></Copy>
                               </div>
