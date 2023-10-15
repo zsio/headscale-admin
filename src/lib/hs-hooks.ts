@@ -21,7 +21,7 @@ export function useHsUsers() {
     `${HS_BASE_URL}/user`, 
     fetcher<{users: HsUser[]}>
   )
-  return {data: data?.users || [], error, isLoading, mutate}
+  return {users: data?.users || [], error, isLoading, mutate}
 }
 
 export function useHsMachines(id = "") {

@@ -18,7 +18,7 @@ import Copy from "@/components/copy";
 import {Button} from "@/components/ui/button";
 import {InputIcon, TrashIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
-import ChangeName from "../../../components/change-name/change-name";
+import ChangeName from "@/components/change-name/change-name";
 import React from "react";
 import {hsDeleteUserByName, hsUserRename, hsCreateUser } from "@/lib/hs-api";
 import {useToast} from "@/components/ui/use-toast";
@@ -26,7 +26,7 @@ import {useToast} from "@/components/ui/use-toast";
 
 export default function Page() {
 
-  const {data, error, isLoading, mutate} = useHsUsers()
+  const {users, error, isLoading, mutate} = useHsUsers()
   const {toast} = useToast()
   const handleRefresh = () => {
     mutate().then()
@@ -67,7 +67,7 @@ export default function Page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((user) => (
+          {users.map((user) => (
             <TableRow key={user.id}>
               <TableCell><Copy text={user.id}>{user.id}</Copy></TableCell>
               <TableCell>

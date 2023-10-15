@@ -73,10 +73,13 @@ export default function Page() {
           />
         </div>
         <div>
-          <Button variant="outline" className="flex items-center gap-1">
-            <PlusCircledIcon className="w-4 h-4"/>
-            <span>添加</span>
-          </Button>
+          <Link href="/admin/machines/register">
+            <Button variant="outline" className="flex items-center gap-1">
+              <PlusCircledIcon className="w-4 h-4"/>
+              <span>添加</span>
+            </Button>
+          </Link>
+          
         </div>
       </div>
       <Table>

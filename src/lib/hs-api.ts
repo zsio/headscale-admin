@@ -54,3 +54,9 @@ export function hsDeleteMachineById(name: string) {
     method: "DELETE"
   });
 }
+
+export function hsRegisterMachine(user: string, key: string) {
+  return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/machine/register?user=${user}&key=${key}`, {
+    method: "POST"
+  });
+}

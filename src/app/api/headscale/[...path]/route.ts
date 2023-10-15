@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PathValidator } from "./path-validator"
 
-const HS_URL = process.env.HEADSCALE_SERVER!;
+const HS_URL = process.env.NEXT_PUBLIC_HEADSCALE_SERVER!;
 const HS_KEY = process.env.HEADSCALE_APIKEY!;
 
 const pathValidator = new PathValidator([

@@ -10,8 +10,8 @@ export async function copy(text: string) {
   await navigator.clipboard.writeText(text)
 }
 
-
-function extractKey(str: string) {
+// 提取字符串中的key
+export function extractKey(str: string) {
   if (typeof str !== 'string') {
       return null;
   }

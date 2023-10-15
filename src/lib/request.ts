@@ -2,7 +2,7 @@
 
 export const fetcher = async (key: string) => {
 
-  const BASE_URL = process.env.HEADSCALE_SERVER;
+  const BASE_URL = process.env.NEXT_PUBLIC_HEADSCALE_SERVER;
   const url = `${BASE_URL}${key}`;
 
 

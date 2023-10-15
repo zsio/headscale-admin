@@ -20,12 +20,25 @@ interface Props {
   id?: string
   oldName?: string
   onClose?: () => void
+  title?: string
+  placeholder?: string
   renameAPI?: (oldName: string, newName: string) => Promise<HsRes<{}>>
   createNameAPI?: (name: string) => Promise<HsRes<{}>>
   children?: React.ReactNode
 }
 
-export default function ChangeName({id, oldName, onClose, children, renameAPI, createNameAPI}: Props) {
+export default function ChangeName(
+  {
+    id,
+    oldName,
+    onClose,
+    children,
+    renameAPI,
+    createNameAPI,
+    title,
+    placeholder
+  }: Props
+) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -111,7 +124,7 @@ export default function ChangeName({id, oldName, onClose, children, renameAPI, c
                 </Fragment>
               ) : (
                 <Fragment>
-                  <span>请输入新的名称：</span>
+                  <span>{title ?? "请输入新的名称："}</span>
                 </Fragment>
               )
             }
@@ -121,7 +134,7 @@ export default function ChangeName({id, oldName, onClose, children, renameAPI, c
               autoFocus
               value={name}
               className="my-2"
-              placeholder="新名称"
+              placeholder={placeholder?? "请输入"}
               onChange={e => setName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
