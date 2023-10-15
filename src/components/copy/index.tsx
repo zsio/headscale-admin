@@ -18,10 +18,16 @@ export default function Copy(props: CopyProps) {
 
   const handleClick = () => {
     setShowCheckbox(true);
-    toast({
-      description: "复制成功"
-    })
-    copy(text);
+
+    copy(text).then(r => {
+      toast({
+        description: "复制成功"
+      })
+    }).catch(() => {
+      toast({
+        description: "复制失败"
+      })
+    });
     setTimeout(() => {
       setShowCheckbox(false);
     }, 1000);

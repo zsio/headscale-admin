@@ -37,7 +37,7 @@ export function hsCreateUser(name: string) {
   });
 }
 
-export function hsDeleteName(name: string) {
+export function hsDeleteUserByName(name: string) {
   return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/user/${name}`, {
     method: "DELETE"
   });
@@ -46,5 +46,11 @@ export function hsDeleteName(name: string) {
 export function hsMachineRename(machineId: string, newName: string) {
   return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/machine/${machineId}/rename/${newName}`, {
     method: "POST",
+  });
+}
+
+export function hsDeleteMachineById(name: string) {
+  return fetchAndHandle<{}>(`${CLIENT_API_BASE_URL}/machine/${name}`, {
+    method: "DELETE"
   });
 }

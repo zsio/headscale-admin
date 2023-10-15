@@ -20,16 +20,6 @@ export default function AdminLayout({children}: {
       icon: PersonIcon
     },
     {
-      url: "/admin/routes",
-      title: "路 由",
-      icon: Link1Icon
-    },
-    {
-      url: "/admin/pre-auth-key",
-      title: "预认证 Key",
-      icon: RocketIcon
-    },
-    {
       url: "/admin/setting",
       title: "设 置",
       icon: GearIcon

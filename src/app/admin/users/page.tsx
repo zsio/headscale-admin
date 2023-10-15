@@ -20,7 +20,7 @@ import {InputIcon, TrashIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
 import ChangeName from "../../../components/change-name/change-name";
 import React from "react";
-import {hsDeleteName, hsUserRename, hsCreateUser } from "@/lib/hs-api";
+import {hsDeleteUserByName, hsUserRename, hsCreateUser } from "@/lib/hs-api";
 import {useToast} from "@/components/ui/use-toast";
 
 
@@ -33,7 +33,7 @@ export default function Page() {
   };
 
   const handleDelete = (user: string) => {
-    hsDeleteName(user).then(() => {
+    hsDeleteUserByName(user).then(() => {
       toast({
         duration: 500,
         description: "删除成功",

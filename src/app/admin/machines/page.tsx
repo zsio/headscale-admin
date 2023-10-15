@@ -26,7 +26,8 @@ import {
 } from "@/components/ui/hover-card"
 import ChangeName from "@/components/change-name/change-name";
 import {Separator} from "@/components/ui/separator";
-import {hsMachineRename} from "@/lib/hs-api";
+import {hsMachineRename, hsDeleteMachineById} from "@/lib/hs-api";
+import Link from "next/link";
 
 export default function Page() {
   const [search, setSearch] = useState("")
@@ -35,6 +36,21 @@ export default function Page() {
   const handleRefresh = () => {
     mutate().then()
   };
+
+  const handleDelete = (id: string) => {
+    hsDeleteMachineById(id).then(() => {
+      toast({
+        duration: 500,
+        description: "删除成功",
+      })
+    }).catch((err) => {
+      toast({
+        duration: 3000,
+        title: "删除失败",
+        description: err
+      })
+    }).finally(handleRefresh)
+  }
 
   let list = data?.filter?.(row => {
     if (row.name.includes(search)) return true;
@@ -77,7 +93,12 @@ export default function Page() {
             <TableRow key={machine.id}>
               <TableCell>
                 <div className="py-1.5">
-                  <div className={`text-primary font-bold`}><Copy text={machine.givenName}>{machine.givenName}</Copy>
+                  <div className={`text-primary font-bold`}>
+                    <Copy text={machine.givenName}>
+                      <Link href={`/admin/machines/${machine.id}`}>
+                        <span className="hover:underline ">{machine.givenName}</span>
+                      </Link>
+                    </Copy>
                   </div>
                   <div className={`text-muted-foreground text-xs`}>
                     <span>{machine.user.name}</span>
@@ -94,19 +115,22 @@ export default function Page() {
                           <HoverCard openDelay={300} closeDelay={100}>
                             <HoverCardTrigger asChild>
                               <div className="underline decoration-dotted">
-                                <Copy text={ips?.[0]} className=""><span className="underline decoration-dotted">{ips?.[0]}</span></Copy>
+                                <Copy text={ips?.[0]} className=""><span
+                                  className="underline decoration-dotted">{ips?.[0]}</span></Copy>
                               </div>
                             </HoverCardTrigger>
                             <HoverCardContent>
                               <div className={`text-muted-foreground flex flex-col gap-y-0.5`}>
                                 <div className={`flex items-center gap-x-1`}>
-                                  <Copy text={machine.givenName} className=""><span
-                                    className="underline decoration-dotted">{machine.givenName}</span></Copy>
+                                  <Copy text={machine.givenName} className="">
+                                    <span className="underline decoration-dotted">{machine.givenName}</span>
+                                  </Copy>
                                 </div>
                                 {
                                   ips?.map((ip) => (
                                     <div key={ip} className={`flex items-center gap-x-1`}>
-                                      <Copy text={ip} className=""><span className="underline decoration-dotted">{ip}</span></Copy>
+                                      <Copy text={ip} className=""><span
+                                        className="underline decoration-dotted">{ip}</span></Copy>
                                     </div>
                                   ))
                                 }
@@ -143,13 +167,12 @@ export default function Page() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>确定要删除此用户吗？</AlertDialogTitle>
+                        <AlertDialogTitle>确定要删除此设备吗？</AlertDialogTitle>
                         <AlertDialogDescription/>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>取 消</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => {
-                        }}>确 定</AlertDialogAction>
+                        <AlertDialogAction onClick={() => handleDelete(machine.id)}>确 定</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
