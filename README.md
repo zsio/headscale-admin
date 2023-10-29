@@ -9,6 +9,12 @@
 这是一个 `headscale` 的Web管理平台，由 `Nextjs` 构建。
 
 
+### 开始开发
+1. 复制 `.env.example` 保存为 `.env.local`
+2. 修改 `.env.local` 文件中所必须的环境变量
+3. 安装依赖 `bun install`
+4. 启动服务 `bun -b run dev`
+
 
 
 ### 为什么选择Nextjs而不是纯前端方案？
