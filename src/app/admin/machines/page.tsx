@@ -117,7 +117,7 @@ export default function Page() {
                         <>
                           <HoverCard openDelay={300} closeDelay={100}>
                             <HoverCardTrigger asChild>
-                              <div className="underline decoration-dotted inline-block">
+                              <div className="inline-block underline decoration-dotted">
                                 <Copy text={ips?.[0]} className=""><span
                                   className="underline decoration-dotted">{ips?.[0]}</span></Copy>
                               </div>
@@ -154,18 +154,18 @@ export default function Page() {
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex h-5 items-center space-x-2 text-sm">
+                <div className="flex items-center h-5 space-x-2 text-sm">
                   <ChangeName renameAPI={hsMachineRename} id={machine.id} oldName={machine.givenName}
                               onClose={() => handleRefresh()}>
                     <Button variant="ghost" size="icon">
-                      <InputIcon className="h-4 w-4"/>
+                      <InputIcon className="w-4 h-4"/>
                     </Button>
                   </ChangeName>
                   <Separator orientation="vertical"/>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4"/>
+                        <TrashIcon className="w-4 h-4"/>
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>

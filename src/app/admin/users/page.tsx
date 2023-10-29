@@ -77,17 +77,17 @@ export default function Page() {
                 <TimeAgo time={user.createdAt}/>
               </TableCell>
               <TableCell>
-                <div className="flex h-5 items-center space-x-2 text-sm">
+                <div className="flex items-center h-5 space-x-2 text-sm">
                   <ChangeName renameAPI={hsUserRename} oldName={user.name} onClose={() => handleRefresh()}>
                     <Button variant="ghost" size="icon">
-                      <InputIcon className="h-4 w-4"/>
+                      <InputIcon className="w-4 h-4"/>
                     </Button>
                   </ChangeName>
                   <Separator orientation="vertical" />
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4"/>
+                        <TrashIcon className="w-4 h-4"/>
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
