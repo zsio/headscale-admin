@@ -22,7 +22,7 @@ export class PathValidator {
    * @param {string} requestUrl - 请求的URL。
    * @returns {boolean} 如果路径被允许，则返回true；否则返回false。
    */
-  isPathAllowed(requestMethod: HttpMethod, requestUrl: string): boolean {
+  public isPathAllowed(requestMethod: HttpMethod, requestUrl: string): boolean {
     console.log(`[ HS Route Validator ]`, process.env.NODE_ENV)
     if(process.env.NODE_ENV === 'development') return true;
     const url = new URL(requestUrl);
@@ -36,13 +36,13 @@ export class PathValidator {
     );
   }
 
-  private matchUrl(allowedUrl: string, requestUrl: string): boolean {
+  private matchUrl = (allowedUrl: string, requestUrl: string) => {
     const allowedUrlParts = allowedUrl.split('/');
     const requestUrlParts = requestUrl.split('/');
 
     return allowedUrlParts.length === requestUrlParts.length &&
       allowedUrlParts.every((part, i) => part === requestUrlParts[i] || this.isDynamicRoute(part));
-  }
+  };
 
   /**
    * 检查所提供的请求查询是否在允许的查询列表中。
@@ -52,15 +52,13 @@ export class PathValidator {
    * @param requestQuery - 请求查询字符串数组。
    * @returns 所提供的请求查询是否被允许。
    */
-  private isQueryAllowed(allowedQuery: string[] | undefined, requestQuery: string[]): boolean {
+  private isQueryAllowed = (allowedQuery: string[] | undefined, requestQuery: string[]): boolean => {
     if (!allowedQuery || allowedQuery.includes('ALL')) {
       return true;
     }
 
-    return requestQuery.every(query => allowedQuery.includes(query));
-  }
+    return requestQuery.every(allowedQuery.includes);
+  };
 
-  private isDynamicRoute(urlPart: string): boolean {
-    return urlPart.startsWith(':');
-  }
+  private isDynamicRoute = (urlPart: string) => urlPart.startsWith(':');
 }

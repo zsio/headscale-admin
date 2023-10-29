@@ -3,7 +3,7 @@
 import {Button} from "@/components/ui/button";
 import {CaretSortIcon, CheckIcon} from "@radix-ui/react-icons";
 
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 
 
 import {
@@ -25,7 +25,6 @@ import {hsCreateUser, hsRegisterMachine} from "@/lib/hs-api";
 import {useHsUsers} from "@/lib/hs-hooks";
 import {toast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
-import {fa} from "timeago.js/lib/lang";
 
 const HEADSCALE_SERVER = process.env.NEXT_PUBLIC_HEADSCALE_SERVER;
 
@@ -35,7 +34,7 @@ export default function Page() {
   const [selectUserValue, setSelectUserValue] = React.useState("")
   const [nodeKey, setNodeKey] = useState("")
   const [submitLoading, setSubmitLoading] = useState(false)
-  const {users, error, isLoading, mutate} = useHsUsers()
+  const {users, isLoading, mutate} = useHsUsers()
 
   const router = useRouter()
 
@@ -43,8 +42,12 @@ export default function Page() {
   const handleRefreshUsers = () => {
     mutate().then()
   };
+  
+  const goToMachines = useCallback(() => {
+    router.push("/admin/machines")
+  }, [])
 
-  function handleSubmit() {
+  const handleSubmit = useCallback(() => {
     if (!selectUserValue) {
       toast({
         variant: "destructive",
@@ -72,21 +75,16 @@ export default function Page() {
         description: "注册成功，请在客户端查看结果。"
       })
       goToMachines()
-    }).catch(e=>{
-      console.log()
+    }).catch(e => {
       toast({
         variant: "destructive",
         title: "注册失败",
         description: e?.message
       })
-    }).finally(()=>{
+    }).finally(() => {
       setSubmitLoading(false)
     })
-  }
-  
-  function goToMachines() {
-    router.push("/admin/machines")
-  }
+  }, [nodeKey, selectUserValue, goToMachines]);
 
   return (
     <div className="px-2">
@@ -148,7 +146,7 @@ export default function Page() {
           </div>
 
         </div>
-        
+
         <h3 className="my-3">3、请把终端中打印的 nodekey 输入到下方</h3>
         <Input placeholder="nodekey:xxxxxx" value={nodeKey} onChange={e => setNodeKey(e.target.value)}/>
       </div>
