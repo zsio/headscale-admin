@@ -21,29 +21,21 @@ import {Separator} from "@/components/ui/separator";
 import ChangeName from "@/components/change-name/change-name";
 import React from "react";
 import {hsDeleteUserByName, hsUserRename, hsCreateUser } from "@/lib/hs-api";
-import {useToast} from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 
 
 export default function Page() {
 
   const {users, error, isLoading, mutate} = useHsUsers()
-  const {toast} = useToast()
   const handleRefresh = () => {
     mutate().then()
   };
 
   const handleDelete = (user: string) => {
     hsDeleteUserByName(user).then(() => {
-      toast({
-        duration: 500,
-        description: "删除成功",
-      })
+      toast.success('删除成功')
     }).catch((err) => {
-      toast({
-        duration: 3000,
-        title: "删除失败",
-        description: err
-      })
+      toast.error('删除失败')
     }).finally(handleRefresh)
   }
 

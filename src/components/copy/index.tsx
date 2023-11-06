@@ -3,7 +3,7 @@
 import {CopyIcon, CheckIcon} from "@radix-ui/react-icons";
 import {cn, copy} from "@/lib/utils"
 import React, {useState} from "react";
-import {useToast} from "@/components/ui/use-toast"
+import toast from "react-hot-toast";
 
 type CopyProps = {
   text: string;
@@ -14,20 +14,14 @@ type CopyProps = {
 export default function Copy(props: CopyProps) {
   const {text, size = 16, children, className, ...rest} = props;
   const [showCheckbox, setShowCheckbox] = useState(false);
-  const {toast} = useToast()
 
   const handleClick = () => {
     setShowCheckbox(true);
 
     copy(text).then(r => {
-      toast({
-        description: "复制成功"
-      })
+      toast.success("复制成功")
     }).catch(() => {
-      toast({
-        
-        description: "复制失败"
-      })
+      toast.error("复制失败")
     });
     setTimeout(() => {
       setShowCheckbox(false);

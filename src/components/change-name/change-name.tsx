@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {UpdateIcon} from "@radix-ui/react-icons";
-import {useToast} from "@/components/ui/use-toast"
+import toast from "react-hot-toast";
 import {Input} from "@/components/ui/input";
 import {Badge} from "@/components/ui/badge"
 import {hsUserRename, hsCreateUser, type HsRes} from "@/lib/hs-api"
@@ -43,25 +43,16 @@ export default function ChangeName(
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const {toast} = useToast()
 
   const handleRename = () => {
     if (!oldName) return
     setLoading(true)
     renameAPI?.(id ?? oldName, name)
       .then(res => {
-        toast({
-          duration: 500,
-          description: "修改成功",
-        })
+        toast.success("修改成功")
       })
       .catch(err => {
-        toast({
-          duration: 3000,
-          title: "修改失败",
-          variant: "destructive",
-          description: err.message,
-        })
+        toast.error("修改失败")
       })
       .finally(() => {
         onClose?.()
@@ -74,18 +65,10 @@ export default function ChangeName(
     setLoading(true)
     createNameAPI?.(name)
       .then(res => {
-        toast({
-          duration: 500,
-          description: "创建成功",
-        })
+        toast.success("创建成功")
       })
       .catch(err => {
-        toast({
-          duration: 3000,
-          title: "创建失败",
-          variant: "destructive",
-          description: err.message,
-        })
+        toast.error("创建失败")
       })
       .finally(() => {
         onClose?.()

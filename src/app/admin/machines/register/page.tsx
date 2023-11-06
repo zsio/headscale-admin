@@ -23,9 +23,8 @@ import {cn} from "@/lib/utils";
 import ChangeName from "@/components/change-name/change-name";
 import {hsCreateUser, hsRegisterMachine} from "@/lib/hs-api";
 import {useHsUsers} from "@/lib/hs-hooks";
-import {toast} from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
-import {fa} from "timeago.js/lib/lang";
 
 const HEADSCALE_SERVER = process.env.NEXT_PUBLIC_HEADSCALE_SERVER;
 
@@ -46,39 +45,26 @@ export default function Page() {
 
   function handleSubmit() {
     if (!selectUserValue) {
-      toast({
-        variant: "destructive",
-        description: "请选择用户"
+      toast("请选择用户",{
+        icon: "👋🏻"
       })
       return;
     }
     if (!nodeKey) {
-      toast({
-        variant: "destructive",
-        description: "请输入nodekey"
-      })
+      toast("请输入nodekey", {icon: "👋🏻"})
       return;
     }
     if (!nodeKey.startsWith("nodekey:")) {
-      toast({
-        variant: "destructive",
-        description: `必须以 "nodekey:" 开头`
-      })
+      toast('必须以 "nodekey:" 开头', {icon: "👋🏻"})
       return;
     }
     setSubmitLoading(true)
     hsRegisterMachine(selectUserValue, nodeKey).then(() => {
-      toast({
-        description: "注册成功，请在客户端查看结果。"
-      })
+      toast.success("注册成功，请在客户端查看结果。")
       goToMachines()
     }).catch(e=>{
       console.log()
-      toast({
-        variant: "destructive",
-        title: "注册失败",
-        description: e?.message
-      })
+      toast.error("注册失败")
     }).finally(()=>{
       setSubmitLoading(false)
     })
