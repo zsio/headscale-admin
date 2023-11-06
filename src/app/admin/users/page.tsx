@@ -19,25 +19,25 @@ import {Button} from "@/components/ui/button";
 import {InputIcon, TrashIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
 import ChangeName from "@/components/change-name/change-name";
-import React from "react";
-import {hsDeleteUserByName, hsUserRename, hsCreateUser } from "@/lib/hs-api";
 import toast from "react-hot-toast";
+import React, {useCallback} from "react";
+import {hsDeleteUserByName, hsUserRename, hsCreateUser} from "@/lib/hs-api";
 
 
 export default function Page() {
 
-  const {users, error, isLoading, mutate} = useHsUsers()
-  const handleRefresh = () => {
+  const {users, isLoading, mutate} = useHsUsers()
+  const handleRefresh = useCallback(() => {
     mutate().then()
-  };
+  }, [mutate])
 
-  const handleDelete = (user: string) => {
+  const handleDelete = useCallback((user: string) => {
     hsDeleteUserByName(user).then(() => {
       toast.success('删除成功')
     }).catch((err) => {
       toast.error('删除失败')
     }).finally(handleRefresh)
-  }
+  }, []);
 
 
   return (
@@ -75,7 +75,7 @@ export default function Page() {
                       <InputIcon className="w-4 h-4"/>
                     </Button>
                   </ChangeName>
-                  <Separator orientation="vertical" />
+                  <Separator orientation="vertical"/>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -94,7 +94,7 @@ export default function Page() {
                     </AlertDialogContent>
                   </AlertDialog>
                 </div>
-                
+
 
               </TableCell>
             </TableRow>

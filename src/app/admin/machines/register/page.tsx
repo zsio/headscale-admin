@@ -3,7 +3,7 @@
 import {Button} from "@/components/ui/button";
 import {CaretSortIcon, CheckIcon} from "@radix-ui/react-icons";
 
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 
 
 import {
@@ -34,7 +34,7 @@ export default function Page() {
   const [selectUserValue, setSelectUserValue] = React.useState("")
   const [nodeKey, setNodeKey] = useState("")
   const [submitLoading, setSubmitLoading] = useState(false)
-  const {users, error, isLoading, mutate} = useHsUsers()
+  const {users, isLoading, mutate} = useHsUsers()
 
   const router = useRouter()
 
@@ -42,8 +42,12 @@ export default function Page() {
   const handleRefreshUsers = () => {
     mutate().then()
   };
+  
+  const goToMachines = useCallback(() => {
+    router.push("/admin/machines")
+  }, [])
 
-  function handleSubmit() {
+  const handleSubmit = useCallback(() => {
     if (!selectUserValue) {
       toast("请选择用户",{
         icon: "👋🏻"
@@ -63,16 +67,11 @@ export default function Page() {
       toast.success("注册成功，请在客户端查看结果。")
       goToMachines()
     }).catch(e=>{
-      console.log()
       toast.error("注册失败")
-    }).finally(()=>{
+    }).finally(() => {
       setSubmitLoading(false)
     })
-  }
-  
-  function goToMachines() {
-    router.push("/admin/machines")
-  }
+  }, [nodeKey, selectUserValue, goToMachines]);
 
   return (
     <div className="px-2">
@@ -134,7 +133,7 @@ export default function Page() {
           </div>
 
         </div>
-        
+
         <h3 className="my-3">3、请把终端中打印的 nodekey 输入到下方</h3>
         <Input placeholder="nodekey:xxxxxx" value={nodeKey} onChange={e => setNodeKey(e.target.value)}/>
       </div>

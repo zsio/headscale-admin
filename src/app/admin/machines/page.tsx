@@ -6,8 +6,8 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import Copy from "@/components/copy";
 import TimeAgo from "@/components/timeago";
 import {Button} from "@/components/ui/button";
-import {DotFilledIcon, DotsHorizontalIcon, InputIcon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
-import React, {useEffect, useState} from "react";
+import {DotFilledIcon, InputIcon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
+import React, {useCallback, useMemo, useState} from "react";
 import {cn} from "@/lib/utils";
 import {Input} from "@/components/ui/input";
 import {
@@ -31,25 +31,27 @@ import Link from "next/link";
 
 export default function Page() {
   const [search, setSearch] = useState("")
-  const {data, error, isLoading, mutate} = useHsMachines()
-  const handleRefresh = () => {
+  const {data, isLoading, mutate} = useHsMachines()
+  const handleRefresh = useCallback(() => {
     mutate().then()
-  };
+  }, [mutate])
 
-  const handleDelete = (id: string) => {
+  const handleDelete = useCallback((id: string) => {
     hsDeleteMachineById(id).then(() => {
       toast.success("删除成功");
     }).catch((err) => {
       toast.error("删除失败");
     }).finally(handleRefresh)
-  }
+  }, [])
 
-  let list = data?.filter?.(row => {
-    if (row.name.includes(search)) return true;
-    if (row.user.name.includes(search)) return true;
-    if (row.givenName.includes(search)) return true;
-    return row.ipAddresses.join(' ').includes(search);
-  }) || []
+  let list = useMemo(() => {
+    return data?.filter?.(row => {
+      if (row.name.includes(search)) return true;
+      if (row.user.name.includes(search)) return true;
+      if (row.givenName.includes(search)) return true;
+      return row.ipAddresses.join(' ').includes(search);
+    }) || []
+  }, [data, search])
 
   return (
     <>
@@ -65,13 +67,13 @@ export default function Page() {
           />
         </div>
         <div>
-          <Link href="/admin/machines/register">
+          <Link href={"/admin/machines/register"}>
             <Button variant="outline" className="flex items-center gap-1">
               <PlusCircledIcon className="w-4 h-4"/>
               <span>添加</span>
             </Button>
           </Link>
-          
+
         </div>
       </div>
       <Table>
