@@ -63,15 +63,19 @@ export default function Page() {
 
   return (
     <>
+      <div className="my-3">
+        <h1 className="text-2xl font-bold">Machines</h1>
+        <p className="text-muted-foreground">Manage the devices connected to your tail net.</p>
+      </div>
       <div className="flex items-center justify-between py-4">
         <div>
           <Input
-            placeholder="名称 / 用户 / IP"
+            placeholder="Name / User / IP"
             value={search}
             onChange={(event) => {
               setSearch(event.target.value)
             }}
-            className="max-w-sm"
+            className="max-w-sm w-96"
           />
         </div>
         <div>
@@ -81,7 +85,6 @@ export default function Page() {
               <span>添加</span>
             </Button>
           </Link>
-
         </div>
       </div>
       <Table>
