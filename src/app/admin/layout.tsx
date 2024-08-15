@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Toaster } from "@/components/ui/toaster"
 import Header from '@/components/header';
 import {CubeIcon, GearIcon, PersonIcon, RocketIcon, Link1Icon } from "@radix-ui/react-icons";
 
@@ -34,7 +33,6 @@ export default function AdminLayout({children}: {
       <main className="container">
         {children}
       </main>
-      <Toaster />
     </>
   )
 }

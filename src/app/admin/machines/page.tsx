@@ -1,7 +1,7 @@
 'use client'
 
 import {useHsMachines} from "@/lib/hs-hooks";
-import {useToast} from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Copy from "@/components/copy";
 import TimeAgo from "@/components/timeago";
@@ -32,23 +32,15 @@ import Link from "next/link";
 export default function Page() {
   const [search, setSearch] = useState("")
   const {data, isLoading, mutate} = useHsMachines()
-  const {toast} = useToast()
   const handleRefresh = useCallback(() => {
     mutate().then()
   }, [mutate])
 
   const handleDelete = useCallback((id: string) => {
     hsDeleteMachineById(id).then(() => {
-      toast({
-        duration: 500,
-        description: "删除成功",
-      })
+      toast.success("删除成功");
     }).catch((err) => {
-      toast({
-        duration: 3000,
-        title: "删除失败",
-        description: err
-      })
+      toast.error("删除失败");
     }).finally(handleRefresh)
   }, [])
 
