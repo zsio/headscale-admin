@@ -1,33 +1,31 @@
 
+# 🌐 Headscale Admin
 
+Welcome to `Headscale Admin`, a web management platform for `Headscale`, built with `Next.js`.
 
+## 🚀 Quick Start
 
-## 欢迎使用 headscale admin
+1. Copy the `.env.example` file and save it as `.env.local`.
+2. Modify the necessary environment variables in the `.env.local` file.
+3. Install dependencies with `pnpm install`.
+4. Start the service with `pnpm run dev`.
 
+## 💡 Why Choose Next.js Over a Pure Front-End Solution?
 
+- **Security**: A pure front-end solution typically stores the `ApiKey` locally in the browser, which can pose security risks.
+- **Convenience**: Switching PCs or browsers usually requires re-verification of the `ApiKey`.
+- **Scalability**: Using `Node.js` to invoke `headscale` allows for features beyond the API, such as ACL editing, version management, service restarts, sub-routing, and more.
+- **User Management**: Simplifies the implementation of a standalone user system and permission control, enabling users to manage their devices independently while allowing administrators to manage everything centrally, without exposing the `ApiKey`.
 
-这是一个 `headscale` 的Web管理平台，由 `Nextjs` 构建。
+## 📋 Backlog Planning
 
+- Prioritize implementing core features through official APIs, such as managing machines, users, tags, and more.
+- Develop an independent user and permission management system.
+- Additional improvements and features to be continued.
 
-### 开始开发
-1. 复制 `.env.example` 保存为 `.env.local`
-2. 修改 `.env.local` 文件中所必须的环境变量
-3. 安装依赖 `bun install`
-4. 启动服务 `bun -b run dev`
+## 🔨 Current Progress
 
-
-
-### 为什么选择Nextjs而不是纯前端方案？
-
-- 纯前端方案一般会把 `ApiKey` 存储到前端浏览器本地，这会造成一定的安全性问题。
-- 更换PC或者浏览器后需要重新验证 `ApiKey`。
-- 方便后期由 `Nodejs` 通过命令的方式调用 `headscale`，从而实现API之外的功能，例如ACL编辑和版本管理、服务重启、子路由等。
-- 方便后期在应用层实现独立的用户系统和权限控制，可由用户独立控制自己的设备，也可由管理员进行统一管理而不必暴露 `ApiKey`。
-
-
-
-### 后面的规划
-
-- 优先实现官方Api实现的内容，例如：机器、用户、标签等。
-- 独立的用户和权限划分。
-- 等等
+- 🚧 Machines: In development
+- 🚧 User Management: In development
+- 🔜 Key Management: Not started yet
+- 🔜 ACL Management: Not started yet
