@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,7 +41,11 @@ export default function ChangeName(
 ) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setName("");
+  }, [open]);
 
 
   const handleRename = () => {
@@ -49,10 +53,10 @@ export default function ChangeName(
     setLoading(true)
     renameAPI?.(id ?? oldName, name)
       .then(res => {
-        toast.success("修改成功")
+        toast.success("success to change")
       })
       .catch(err => {
-        toast.error("修改失败")
+        toast.error("failed to change")
       })
       .finally(() => {
         onClose?.()
@@ -65,10 +69,10 @@ export default function ChangeName(
     setLoading(true)
     createNameAPI?.(name)
       .then(res => {
-        toast.success("创建成功")
+        toast.success("success")
       })
       .catch(err => {
-        toast.error("创建失败")
+        toast.error("failed")
       })
       .finally(() => {
         onClose?.()
@@ -84,7 +88,7 @@ export default function ChangeName(
 
 
   return (
-    <AlertDialog open={open}>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <div onClick={() => setOpen(true)}>
           {
@@ -98,7 +102,7 @@ export default function ChangeName(
             {
               oldName ? (
                 <Fragment>
-                  <span>当前名称：</span>
+                  <span>current name:</span>
                   <Badge
                     variant="secondary"
                     className="text-sm">
@@ -107,7 +111,7 @@ export default function ChangeName(
                 </Fragment>
               ) : (
                 <Fragment>
-                  <span>{title ?? "请输入新的名称："}</span>
+                  <span>{title ?? "please input new name"}</span>
                 </Fragment>
               )
             }
@@ -117,7 +121,8 @@ export default function ChangeName(
               autoFocus
               value={name}
               className="my-2"
-              placeholder={placeholder?? "请输入"}
+              type="text"
+              placeholder={placeholder ?? "please input"}
               onChange={e => setName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -130,11 +135,11 @@ export default function ChangeName(
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading} onClick={() => setOpen(false)}>
-            <span>取 消</span>
+            <span>cancel</span>
           </AlertDialogCancel>
           <AlertDialogAction disabled={loading} onClick={handleClick}>
             {loading && <UpdateIcon className="animate-spin"/>}
-            <span>确 定</span>
+            <span>confirm</span>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

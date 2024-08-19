@@ -147,7 +147,7 @@ export default function Page() {
               <TableCell>
                 <div className="flex items-center">
                   <DotFilledIcon className={cn("w-6 h-6 text-gray-400", machine.online && "text-green-600")}/>
-                  <TimeAgo time={machine.lastSeen} text={machine.online ? "在线" : undefined}/>
+                  <TimeAgo time={machine.lastSeen} text={machine.online ? "Online" : undefined}/>
                 </div>
               </TableCell>
               <TableCell>
@@ -167,12 +167,12 @@ export default function Page() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>确定要删除此设备吗？</AlertDialogTitle>
+                        <AlertDialogTitle className="text-red-500">Are you sure you want to delete this device?</AlertDialogTitle>
                         <AlertDialogDescription/>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>取 消</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(machine.id)}>确 定</AlertDialogAction>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(machine.id)}>Confirm</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
