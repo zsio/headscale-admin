@@ -31,7 +31,7 @@ export function useHsMachines(id = "") {
     isLoading, 
     mutate
   } = useSWR(
-    `${HS_BASE_URL}/machine?user=${id}`, 
+    `${HS_BASE_URL}/machine`, 
     fetcher<{machines: HsMachine[]}>
   )
   return {data: data?.machines || [], error, isLoading, mutate}
